@@ -61,8 +61,8 @@ def convert_pdfs_recursively(root_folder, output_folder, zoom=2):
                 print(f"Arquivo '{filename}' não é um PDF. Ignorando.")
 
 # Exemplo de uso:
-root_folder = "C:/Users/OTY8513/Downloads/ATIVORE - Automação dos reports"  # Substitua pelo caminho da sua pasta raiz
-output_folder = "C:/Users/OTY8513/Downloads/ATIVORE - Automação dos reports"  # Substitua pelo caminho da pasta de saída
+root_folder = "C:/Users/natal/Documents/Ativore"  # Substitua pelo caminho da sua pasta raiz
+output_folder = "C:/Users/natal/Documents/Ativore"  # Substitua pelo caminho da pasta de saída
 zoom = 2  # Fator de zoom (opcional)
 
 convert_pdfs_recursively(root_folder, output_folder, zoom)
