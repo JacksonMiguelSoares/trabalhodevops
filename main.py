@@ -1,5 +1,7 @@
-import fitz  # PyMuPDF
+import fitz
 import os
+import tkinter as tk
+from tkinter import messagebox
 
 def pdf_to_jpg_pymupdf(pdf_path, output_path, zoom=2, page_number=0):
     """Converte uma página específica de um PDF em uma imagem JPG."""
@@ -59,6 +61,11 @@ def convert_pdfs_recursively(root_folder, output_folder, zoom=2):
                     print(f"Erro ao processar o número de páginas do PDF '{pdf_path}': {e}")
             else:
                 print(f"Arquivo '{filename}' não é um PDF. Ignorando.")
+ # Exibir mensagem ao concluir
+    root = tk.Tk()
+    root.withdraw()
+    messagebox.showinfo("Conversão Concluída", "Todos os PDFs foram convertidos com sucesso!")
+
 
 # Exemplo de uso:
 root_folder = "C:/Users/natal/Documents/Ativore"  # Substitua pelo caminho da sua pasta raiz
