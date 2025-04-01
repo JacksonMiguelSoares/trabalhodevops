@@ -1,10 +1,9 @@
 import fitz
 import os
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 
-def pdf_to_jpg_pymupdf(pdf_path, output_path, zoom=2, page_number=0):
-    """Converte uma página específica de um PDF em uma imagem JPG."""
+def pdf_to_jpg(pdf_path, output_path, zoom=2, page_number=0):
     try:
         with fitz.open(pdf_path) as pdf_document:
             page = pdf_document.load_page(page_number)
@@ -12,64 +11,56 @@ def pdf_to_jpg_pymupdf(pdf_path, output_path, zoom=2, page_number=0):
             pix = page.get_pixmap(matrix=mat)
             output_file = f"{output_path}.jpg"
             pix.save(output_file)
-            pdf_document.close()
             print(f"Página {page_number + 1} do PDF '{pdf_path}' convertida para JPG com sucesso!")
     except Exception as e:
         print(f"Erro ao converter página {page_number + 1} do PDF '{pdf_path}': {e}")
 
 def convert_pdfs_recursively(root_folder, output_folder, zoom=2):
-    """Converte todos os PDFs em uma pasta e suas subpastas recursivamente,
-       EXCLUINDO arquivos que começam com 'Modelo'."""
+
     print(f"Analisando pasta raiz: {root_folder}")
 
     for dirpath, dirnames, filenames in os.walk(root_folder):
         print(f"Entrando na pasta: {dirpath}")
 
         for filename in filenames:
-            if filename.endswith(".pdf"):
-                # Ignora arquivos que começam com "Modelo"
-                if filename.startswith("Modelo"):
-                    print(f"Arquivo '{filename}' começa com 'Modelo'. Ignorando.")
-                    continue  # Pula para o próximo arquivo
+            if not filename.lower().endswith(".pdf"):
+                print(f"Ignorado (não é PDF): {filename}")
+                continue
 
-                pdf_path = os.path.join(dirpath, filename)
-                print(f"Arquivo PDF encontrado: {pdf_path}")
+            if filename.lower().startswith("modelo"):
+                print(f"Ignorado (começa com 'Modelo'): {filename}")
+                continue
 
-                # Remove a extensão .pdf do nome do arquivo
-                base_name = os.path.splitext(filename)[0]
+            pdf_path = os.path.join(dirpath, filename)
+            base_name = os.path.splitext(filename)[0]
+            relative_path = os.path.relpath(dirpath, root_folder)
+            output_subfolder = os.path.join(output_folder, relative_path)
+            os.makedirs(output_subfolder, exist_ok=True)
 
-                # Caminho para salvar as imagens JPG na mesma pasta do PDF
-                relative_path = os.path.relpath(dirpath, root_folder)
-                output_subfolder = os.path.join(output_folder, relative_path)
-                os.makedirs(output_subfolder, exist_ok=True)  # Cria a pasta, se não existir
-
-                try:
-                    pdf_document = fitz.open(pdf_path)
+            try:
+                with fitz.open(pdf_path) as pdf_document:
                     num_pages = pdf_document.page_count
-                    pdf_document.close()
 
-                    if num_pages > 1:
-                        # Se o PDF tem mais de uma página, converte cada página com um sufixo
-                        for page_number in range(num_pages):
-                            output_path = os.path.join(output_subfolder, f"{base_name}_{page_number + 1}")
-                            pdf_to_jpg_pymupdf(pdf_path, output_path, zoom, page_number)
-                    else:
-                        # Se o PDF tem apenas uma página, converte sem sufixo
-                        output_path = os.path.join(output_subfolder, base_name)
-                        pdf_to_jpg_pymupdf(pdf_path, output_path, zoom, 0)  # Converte a primeira página
-                except Exception as e:
-                    print(f"Erro ao processar o número de páginas do PDF '{pdf_path}': {e}")
-            else:
-                print(f"Arquivo '{filename}' não é um PDF. Ignorando.")
+                for page_number in range(num_pages):
+                    output_path = os.path.join(output_subfolder, f"{base_name}_{page_number + 1}")
+                    pdf_to_jpg(pdf_path, output_path, zoom, page_number)
+            except Exception as e:
+                print(f"Erro ao processar '{pdf_path}': {e}")
+
+# Abrir o explorador de arquivos para selecionar a pasta
+root = tk.Tk()
+root.withdraw()
+root_folder = filedialog.askdirectory(title="Selecione a pasta de entrada")
+output_folder = filedialog.askdirectory(title="Selecione a pasta de saída")
+
+if root_folder and output_folder:
+    zoom = 2
+    convert_pdfs_recursively(root_folder, output_folder, zoom)
+else:
+    print("Operação cancelada pelo usuário.")
+
+print("Conversão concluída!")
  # Exibir mensagem ao concluir
-    root = tk.Tk()
-    root.withdraw()
-    messagebox.showinfo("Conversão Concluída", "Todos os PDFs foram convertidos com sucesso!")
-
-
-# Exemplo de uso:
-root_folder = "C:/Users/natal/Documents/Ativore"  # Substitua pelo caminho da sua pasta raiz
-output_folder = "C:/Users/natal/Documents/Ativore"  # Substitua pelo caminho da pasta de saída
-zoom = 2  # Fator de zoom (opcional)
-
-convert_pdfs_recursively(root_folder, output_folder, zoom)
+root = tk.Tk()
+root.withdraw()
+messagebox.showinfo("Conversão Concluída", "Todos os PDFs foram convertidos com sucesso!")
