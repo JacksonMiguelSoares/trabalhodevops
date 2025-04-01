@@ -4,14 +4,14 @@ import os
 def pdf_to_jpg_pymupdf(pdf_path, output_path, zoom=2, page_number=0):
     """Converte uma página específica de um PDF em uma imagem JPG."""
     try:
-        pdf_document = fitz.open(pdf_path)
-        page = pdf_document.load_page(page_number)
-        mat = fitz.Matrix(zoom, zoom)  # Aumenta a resolução
-        pix = page.get_pixmap(matrix=mat)
-        output_file = f"{output_path}.jpg"
-        pix.save(output_file)
-        pdf_document.close()
-        print(f"Página {page_number + 1} do PDF '{pdf_path}' convertida para JPG com sucesso!")
+        with fitz.open(pdf_path) as pdf_document:
+            page = pdf_document.load_page(page_number)
+            mat = fitz.Matrix(zoom, zoom)  # Aumenta a resolução
+            pix = page.get_pixmap(matrix=mat)
+            output_file = f"{output_path}.jpg"
+            pix.save(output_file)
+            pdf_document.close()
+            print(f"Página {page_number + 1} do PDF '{pdf_path}' convertida para JPG com sucesso!")
     except Exception as e:
         print(f"Erro ao converter página {page_number + 1} do PDF '{pdf_path}': {e}")
 
