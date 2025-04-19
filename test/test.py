@@ -3,7 +3,8 @@ import tempfile
 import os
 import shutil
 import fitz  # PyMuPDF
-from src.main import pdf_to_jpg_pymupdf, convert_pdfs_recursively, pdf_para_jpg
+from src.main import pdf_to_jpg_pymupdf, convert_pdfs_recursively
+
 
 
 class TestConversaoPDF(unittest.TestCase):
