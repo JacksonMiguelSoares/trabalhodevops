@@ -1,4 +1,12 @@
- discord:
+name: Discord
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
