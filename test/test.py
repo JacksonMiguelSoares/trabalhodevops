@@ -49,5 +49,19 @@ class TestConversaoPDF(unittest.TestCase):
             for file in files:
                 self.assertFalse(file.startswith("Modelo"), "Arquivo 'Modelo' não deveria ter sido convertido")
 
+    def test_pdf_vazio_nao_cria_imagem(self):
+        pdf_vazio_path = os.path.join(self.test_dir, "vazio.pdf")
+        fitz.open().save(pdf_vazio_path)  # Cria um PDF sem páginas
+        convert_pdfs_recursively(self.test_dir, self.output_dir)
+        arquivos_gerados = os.listdir(self.output_dir)
+        self.assertFalse(any(f.endswith(".jpg") for f in arquivos_gerados), "Imagem não deveria ser gerada para PDF vazio")
+
+    def test_nome_do_arquivo_convertido(self):
+        convert_pdfs_recursively(self.test_dir, self.output_dir)
+        arquivos_gerados = os.listdir(self.output_dir)
+        nomes_sem_extensao = [os.path.splitext(f)[0] for f in arquivos_gerados if f.endswith(".jpg")]
+        self.assertIn("exemplo", "".join(nomes_sem_extensao), "Nome do arquivo convertido está incorreto")
+
+
 if __name__ == '__main__':
     unittest.main()
