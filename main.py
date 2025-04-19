@@ -66,3 +66,4 @@ output_folder = "C:/Users/natal/Documents/Ativore"  # Substitua pelo caminho da 
 zoom = 2  # Fator de zoom (opcional)
 
 convert_pdfs_recursively(root_folder, output_folder, zoom)
+print("teste")
