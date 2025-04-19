@@ -1,6 +1,9 @@
 import fitz  # PyMuPDF
 import os
 
+
+
+
 def pdf_to_jpg_pymupdf(pdf_path, output_path, zoom=2, page_number=0):
     """Converte uma página específica de um PDF em uma imagem JPG."""
     try:
@@ -60,10 +63,11 @@ def convert_pdfs_recursively(root_folder, output_folder, zoom=2):
             else:
                 print(f"Arquivo '{filename}' não é um PDF. Ignorando.")
 
-# Exemplo de uso:
-root_folder = "C:/Users/natal/Documents/Ativore"  # Substitua pelo caminho da sua pasta raiz
-output_folder = "C:/Users/natal/Documents/Ativore"  # Substitua pelo caminho da pasta de saída
-zoom = 2  # Fator de zoom (opcional)
+
+
+root_folder = os.getenv("ROOT_FOLDER", "/dados")
+output_folder = os.getenv("OUTPUT_FOLDER", "/dados")
+zoom = 2
 
 convert_pdfs_recursively(root_folder, output_folder, zoom)
-print("teste")
+
