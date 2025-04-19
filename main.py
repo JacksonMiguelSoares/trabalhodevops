@@ -70,5 +70,5 @@ output_folder = os.getenv("OUTPUT_FOLDER", "/dados")
 zoom = 2
 
 convert_pdfs_recursively(root_folder, output_folder, zoom)
-
+print("teste discord")
 
